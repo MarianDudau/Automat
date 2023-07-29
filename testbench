@@ -1,0 +1,28 @@
+`timescale 1ns / 1ps
+
+module tb();
+reg clk_tb;
+reg rst_tb;
+reg in_tb;
+wire out_tb;
+wire fail_tb;
+  
+  FSM fsm0(.clk(clk_tb), .rst(rst_tb), .in(in_tb), 
+           .out(out_tb), .fail(fail_tb));
+    
+    initial begin
+        clk_tb = 0;
+       forever #1 clk_tb = ~clk_tb;
+    end
+    
+     initial begin
+            in_tb = 0;
+         rst_tb = 1;
+      #2 rst_tb = 0;
+      #10 in_tb = 1;
+      #5  in_tb = 9;
+      #10 in_tb = 0;
+      #5  in_tb = 8;
+     #10 $stop();
+     end
+endmodule
