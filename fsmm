@@ -1,0 +1,77 @@
+`timescale 1ns / 1ps
+
+module FSM(
+        input rst,
+        input clk,
+        input in, 
+        output reg out,
+        output reg fail
+            );
+  localparam Q0= 3'd0;
+  localparam Q1= 3'd1;
+  localparam Q2= 3'd2;
+  localparam Q3= 3'd3;
+  localparam Q4= 3'd4;
+  localparam QF= 3'd5;
+  
+  reg [2:0] state, state_next;
+      always@(posedge clk) begin
+        if(rst == 1)
+            state <= Q0;
+            else
+          state <= state_next;
+    end
+   always@(*) begin
+    state_next = state;
+       case (state)
+       Q0: begin
+            if (in == 1) state_next = Q1;
+            if (in != 1) state_next = QF;
+            end 
+       Q1:  begin
+            if(in == 9) state_next = Q2;
+            if(in != 9) state_next = QF;
+            end
+       Q2: begin
+               if(in == 0) state_next =Q3;
+               if(in != 0) state_next =QF; 
+           end     
+       Q3:  begin
+            if (in == 8) state_next = Q4;
+            if (in != 8) state_next = QF;
+              end
+       Q4: begin
+             state_next = Q4;
+            end
+endcase
+    end
+      always@(*) begin
+        case(state)
+         Q0: begin 
+            out = 0; 
+            fail =0;
+            end
+         Q1: begin 
+            out = 0;
+            fail= 0; 
+            end        
+         Q2: begin 
+            out = 0;
+            fail =0;
+            end
+         Q3: begin 
+            out = 0; 
+            fail =0;
+            end   
+         Q4: begin
+            out  = 1;
+            fail = 0;
+             end   
+         QF: begin
+            out = 0;
+            fail =1;
+            end     
+      endcase
+      end
+            
+endmodule
